@@ -2,6 +2,7 @@ package pl.edu.pb.wi.bai.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Table(name = "MESSAGE")
 @Entity
@@ -14,8 +15,8 @@ public class Message implements Serializable {
     String text;
     @Column(name = "MOD")
     @JoinColumn(foreignKey = @ForeignKey(name = "USERS_FK"))
-    @ManyToOne(targetEntity = User.class)
-    User moderatorId;
+    @ManyToMany(targetEntity = User.class)
+    Set<User> moderatorId;
 
     public Integer getMessageId() {
         return messageId;
@@ -33,11 +34,11 @@ public class Message implements Serializable {
         this.text = text;
     }
 
-    public User getModeratorId() {
+    public Set<User> getModeratorId() {
         return moderatorId;
     }
 
-    public void setModeratorId(User moderatorId) {
+    public void setModeratorId(Set<User> moderatorId) {
         this.moderatorId = moderatorId;
     }
 
