@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="pageHead">
     <meta charset="UTF-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -37,8 +38,6 @@
             <div class="col-md-6 centered justFelexEnd">
                 <div th:if="${session != null and session.userId != null}">
                     <div id="loginHolder" class="flexAlignedCenter">
-                        <a class="btn btn-default btn-block" style="margin-top: 5px" th:href="@{/offered}">Zaoferowano ci</a>
-                        <a class="btn btn-default btn-block" style="margin-top: 5px" th:href="@{/userOffers}">Moje Oferty</a>
                         <a class="btn btn-default btn-block" th:href="@{/myProducts}">Moje Produkty</a>
                         <span id="loggeedAs" th:text="'Witaj, '+${session.user.login}"></span>
                         <a id="logout" class="btn btn-default btn-block" th:href="@{/logout}">Wyloguj się</a>
@@ -58,11 +57,7 @@
     <div th:fragment="leftCol" class="col-md-2 categories">
         <span class="btn btn-primary btn-block">Categories</span>
         <!--<div class="loader box" id="leftLoader"></div>-->
-        <ul id="catList">
-            <li th:each="cat : ${categories}">
-                <a th:text="${cat.name}" th:href="@{/category(id=${cat.id})}"></a>
-            </li>
-        </ul>
+
     </div>
 </div>
 

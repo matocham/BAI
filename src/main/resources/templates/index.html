@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="base :: pageHead">
 </head>
 <body>
@@ -10,39 +11,7 @@
         <div class="col-md-8 categories">
             <h2>Witamy w serwisie</h2>
             <!--<div class="loader box" id="catLoader"></div>-->
-            <div id="addverts">
-                <div class='panel panel-default' th:each="product : ${products}">
-                    <div class='row addContainer vertical-align'>
-                        <div class='col-md-2 centered'>
-                            <a th:href="@{product/{id}(id=${product.id})}" class='thumbnail autoMargin'>
-                                <img th:src='@{/external/{path}(path=${product.imageUrl})}'/>
-                            </a>
-                        </div>
-                        <div class='col-md-10'>
-                            <div class='h3 addHeader'>
-                                <a th:href="@{product/{id}(id=${product.id})}" th:text="${product.title}"></a>
-                            </div>
-                            <div class='h6 fromCategory' th:text="'Z kategorii: ' + ${product.category.name}">
-                            </div>
-                            <div class='h4 echangeFor'>
-                                <b th:text="'Zamieni się za: ' + ${product.exchangeFor.name}"></b>
-                            </div>
-                            <div class='h6 city'><span th:text="'Wystawione przez: ' + ${product.owner.login}"></span>
-                            </div>
-                            <div class='h6 city'><span th:text="${product.owner.city}"></span>
-                            </div>
-                            <div class='h6 addedDate' th:inline="text"><b>Dodano</b>&nbsp;[[${#dates.format(product.addDate, 'dd-MM-yyyy')}]]</div>
-                            <div th:if="${session != null and session.userId != null and product.owner.id != session.userId}">
-                                <a class="btn btn-default btn-success" th:href="@{/addOffer/{id}(id=${product.id})}">Złóż ofertę</a>
-                                <a class="btn btn-default btn-warning" th:href="@{/conversation(id=${product.id})}">Zadaj
-                                    pytanie</a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
 
-            </div>
             <!-- <p id="noItems" class="bg-danger has-error noResults">
                  <br/>Brak ogłoszeń w kategorii<br/><br/>
              </p>-->

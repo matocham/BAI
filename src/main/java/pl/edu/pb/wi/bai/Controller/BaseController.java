@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class BaseController {
-    @RequestMapping ("/")
+    @RequestMapping ("/index")
     String index(Model model) {
         return "index";
+    }
+    @RequestMapping ("/login")
+    String login(Model model) {
+        return "login";
     }
 }
