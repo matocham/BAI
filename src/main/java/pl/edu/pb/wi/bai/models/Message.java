@@ -9,7 +9,8 @@ import java.util.Set;
 public class Message implements Serializable {
     @Id
     @Column(name = "MESSAGE_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MESSAGE_SEQ")
+    @SequenceGenerator(name = "MESSAGE_SEQ", sequenceName = "message_seq")
     Integer messageId;
     @Column(name = "TEXT")
     String text;

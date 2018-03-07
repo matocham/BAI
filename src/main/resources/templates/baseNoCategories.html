@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="pageHead">
     <meta charset="UTF-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -24,8 +25,8 @@
                     </a>
                 </div>
             </div>
-            <div class="col-md-2 col-md-offset-8 centered" id="loginHolder">
-                <span th:if="${session != null and session.userId != null}" id="loggeedAs" th:text="'Witaj, '+${session.user.login}">Witaj, Adamie</span>
+            <div sec:authorize="isAuthenticated()" class="col-md-2 col-md-offset-8 centered" id="loginHolder">
+                <span id="loggeedAs" >Witaj,&nbsp;<i sec:authentication="principal.username"></i></span>
             </div>
         </div>
     </div>

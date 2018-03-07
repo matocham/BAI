@@ -2,22 +2,23 @@ package pl.edu.pb.wi.bai.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "USERS")
 public class User implements Serializable{
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
+    @SequenceGenerator(name = "USERS_SEQ", sequenceName = "users_seq")
     @Column(name = "USER_ID")
     Integer userId;
     @Column(name = "LOGIN")
-    String login;
+    String username;
     @Column(name = "PASSWORD_HASH")
-    String passwordHash;
-    @Column(name = "SALT")
-    String salt;
+    String password;
     @Column(name = "LAST_LOGIN")
-    String lastLoginDate;
+    Date lastLoginDate;
 
     public Integer getUserId() {
         return userId;
@@ -27,48 +28,37 @@ public class User implements Serializable{
         this.userId = userId;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public String getLastLoginDate() {
+    public Date getLastLoginDate() {
         return lastLoginDate;
     }
 
-    public void setLastLoginDate(String lastLoginDate) {
+    public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
     }
-
-
 
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", login='" + login + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", salt='" + salt + '\'' +
-                ", lastLoginDate='" + lastLoginDate + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", lastLoginDate=" + lastLoginDate +
                 '}';
     }
 }
