@@ -14,8 +14,12 @@ public class RegisterService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public User register(String username, String password) {
-        User user = new User();
+    public User register(String username, String password) throws UserExistsException {
+        User user = userRepository.findByUsername(username);
+        if(user != null){
+            throw new UserExistsException();
+        }
+        user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
