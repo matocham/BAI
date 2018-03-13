@@ -19,8 +19,8 @@
             <div class="col-md-2 centered">
                 <div class="text-left">
                     <a th:href="@{/}">
-                        <h1 id="title" class="header-title">Barter</h1>
-                        <h2 id="title2" class="header-title"><em>-pro</em></h2>
+                        <h1 id="title" class="header-title">Napisz</h1>
+                        <h2 id="title2" class="header-title"><em>-post</em></h2>
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div sec:authorize="isAuthenticated()">
                     <div id="loginHolder" class="flexAlignedCenter">
                         <span id="loggeedAs">Witaj,&nbsp;<i sec:authentication="principal.username"></i></span>
-                        <a id="logout" class="btn btn-default btn-block" th:href="@{/logout}">Wyloguj się</a>
+                        <a id="logout" class="btn btn-default btn-block" href="#">Wyloguj się</a>
                     </div>
                 </div>
                 <div sec:authorize="isAnonymous()">
@@ -41,15 +41,14 @@
                 </div>
 
             </div>
+            <form id="logoutForm" th:action="@{/logout}" method="post">
+            </form>
+            <script>
+                bindLogoutButton();
+            </script>
         </div>
-    </div></nav>
-<div class="container-fluid">
-    <div th:fragment="leftCol" class="col-md-2 categories">
-        <span class="btn btn-primary btn-block">Categories</span>
-        <!--<div class="loader box" id="leftLoader"></div>-->
-
     </div>
-</div>
+</nav>
 
 </body>
 </html>

@@ -7,14 +7,25 @@
 <div class="container-fluid">
     <div th:replace="base :: header"></div>
     <div class="row">
-        <div th:replace="base :: leftCol"></div>
-        <div class="col-md-8 categories">
+        <div class="col-md-6 col-md-offset-3">
             <h2>Witamy w serwisie</h2>
-            <!--<div class="loader box" id="catLoader"></div>-->
+            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="addPostButton" th:href="@{/addPost}">Dodaj post</a>
+            <div id="addverts">
+                <div class='panel panel-default' th:each="message : ${posts}">
+                    <div class='row addContainer vertical-align'>
+                        <div class='col-md-12'>
+                            <span class='msgBody' th:text="${message.text}"></span>
+                            <div class='h6 owner'><span th:text="'Wystawione przez: ' + ${message.owner.username}"></span></div>
+                            <div sec:authorize="isAuthenticated()">
+                                <a th:if="${#lists.contains(message.allowedUsers, #authentication.principal.username) or #authentication.principal.username == message.owner.username}" class="btn btn-default btn-success" th:href="@{/edit/{id}(id=${message.id})}">Edytuj</a>
+                                <a th:if="${#authentication.principal.username == message.owner.username}" class="btn btn-default btn-warning" th:href="@{/manage/{id}(id=${message.id})}">Zarządzaj</a>
+                            </div>
+                        </div>
 
-            <!-- <p id="noItems" class="bg-danger has-error noResults">
-                 <br/>Brak ogłoszeń w kategorii<br/><br/>
-             </p>-->
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

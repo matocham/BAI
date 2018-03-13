@@ -109,7 +109,7 @@
     -moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
     margin: 0 0;
-    height: 150px;
+    padding-bottom: 5px;
 }
 
 .addBigContainer {
@@ -137,10 +137,14 @@
     color:darkgray;
 }
 
-.echangeFor{
+.msgBody{
     margin-top: 5px;
     margin-bottom: 0px;
+    display: block;
     color:black;
+    word-wrap: break-word;
+    width: 100%;
+    white-space: pre-wrap;
 }
 
 .city {
@@ -176,22 +180,6 @@
 .owner{
     color:#5336e1;
 }
-
-/*.price{
-    color: #3356b4;
-    margin-top: 5px !important;
-    margin-bottom: 1px !important;
-}
-
-.priceType{
-    display: inline-block;
-    height: 100%;
-    line-height: 100%;
-    margin-top:0px;
-    margin-bottom: 0px;
-    text-align: center;
-    color: darkred;
-}*/
 
 .previewImage{
     width:100%;
@@ -229,4 +217,8 @@
     right: 0px;
     left: 0px;
     height: 50px;
+}
+
+#addPostButton {
+    margin-bottom: 5px;
 }

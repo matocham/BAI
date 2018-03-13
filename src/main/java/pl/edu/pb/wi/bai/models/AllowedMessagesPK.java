@@ -10,9 +10,25 @@ import java.util.Set;
 @Embeddable
 public class AllowedMessagesPK implements Serializable{
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,targetEntity = User.class)
-    @JoinColumn(name = "User_ID")
-    Set<User> userId;
+    @JoinColumn(name = "USER_ID")
+    User userId;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,targetEntity = Message.class)
     @JoinColumn(name = "MESSAGE_ID")
-    Set<User> messageId;
+    Message messageId;
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public Message getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Message messageId) {
+        this.messageId = messageId;
+    }
 }

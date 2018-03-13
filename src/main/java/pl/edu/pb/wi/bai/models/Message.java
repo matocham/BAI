@@ -11,19 +11,20 @@ public class Message implements Serializable {
     @Column(name = "MESSAGE_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MESSAGE_SEQ")
     @SequenceGenerator(name = "MESSAGE_SEQ", sequenceName = "message_seq")
-    Integer messageId;
+    Long messageId;
+
     @Column(name = "TEXT")
     String text;
-    @Column(name = "MOD")
-    @JoinColumn(foreignKey = @ForeignKey(name = "USERS_FK"))
-    @ManyToMany(targetEntity = User.class)
-    Set<User> moderatorId;
 
-    public Integer getMessageId() {
+    @JoinColumn(name = "MOD", foreignKey = @ForeignKey(name = "USERS_FK"))
+    @ManyToOne(targetEntity = User.class)
+    User moderator;
+
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(Integer messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 
@@ -35,12 +36,12 @@ public class Message implements Serializable {
         this.text = text;
     }
 
-    public Set<User> getModeratorId() {
-        return moderatorId;
+    public User getModerator() {
+        return moderator;
     }
 
-    public void setModeratorId(Set<User> moderatorId) {
-        this.moderatorId = moderatorId;
+    public void setModerator(User moderator) {
+        this.moderator = moderator;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class Message implements Serializable {
         return "Message{" +
                 "messageId=" + messageId +
                 ", text='" + text + '\'' +
-                ", moderatorId=" + moderatorId +
+                ", moderator=" + moderator +
                 '}';
     }
 }
