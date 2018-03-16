@@ -27,6 +27,11 @@
                         </select>
                     </div>
                 </div>
+                <div class='panel panel-default' th:each="user : ${message.allowedUsers}">
+                    <button type="submit" name="action" value="${user}" th:text="inline" class="btn btn-danger" aria-label="Left Align"> [[${user}]]
+                        <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                </div>
+
                 <div class="form-group row">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-primary addProductButton">Dodaj</button>
