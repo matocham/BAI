@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h2>Witamy w serwisie</h2>
-            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="addPostButton" th:href="@{/addPost}">Dodaj post</a>
+            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="addPostButton" th:href="@{/addMessage}">Dodaj post</a>
             <div id="addverts">
                 <div class='panel panel-default' th:each="message : ${posts}">
                     <div class='row addContainer vertical-align'>
@@ -19,6 +19,9 @@
                             <div sec:authorize="isAuthenticated()">
                                 <a th:if="${#lists.contains(message.allowedUsers, #authentication.principal.username) or #authentication.principal.username == message.owner.username}" class="btn btn-default btn-success" th:href="@{/edit/{id}(id=${message.id})}">Edytuj</a>
                                 <a th:if="${#authentication.principal.username == message.owner.username}" class="btn btn-default btn-warning" th:href="@{/manage/{id}(id=${message.id})}">Zarządzaj</a>
+                                <a th:if="${#authentication.principal.username == message.owner.username}" class="btn btn-default btn-danger" th:href="@{/delete/{id}(id=${message.id})}">Usuń</a>
+
+
                             </div>
                         </div>
 
