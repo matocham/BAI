@@ -12,7 +12,8 @@ public class User implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
     @SequenceGenerator(name = "USERS_SEQ", sequenceName = "users_seq")
     @Column(name = "USER_ID")
-    Integer userId;
+    Long id;
+
     @Column(name = "LOGIN")
     String username;
     @Column(name = "PASSWORD_HASH")
@@ -20,12 +21,12 @@ public class User implements Serializable{
     @Column(name = "LAST_LOGIN")
     Date lastLoginDate;
 
-    public Integer getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -55,7 +56,7 @@ public class User implements Serializable{
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", lastLoginDate=" + lastLoginDate +

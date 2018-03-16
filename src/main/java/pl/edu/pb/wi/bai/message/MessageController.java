@@ -7,10 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
 import pl.edu.pb.wi.bai.security.MyUserPrincipal;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Controller
 public class MessageController {
@@ -19,7 +23,6 @@ public class MessageController {
     MessageService messageService;
     @Autowired
     UserRepository userRepository;
-
     @RequestMapping(value = {"/index", "/"})
     String index(Model model) {
         model.addAttribute("posts", messageService.getAllMessages());
@@ -77,5 +80,18 @@ public class MessageController {
     private boolean hasPermission(DisplayMessageDto displayMessageDto, MyUserPrincipal myUserPrincipal) {
 
         return myUserPrincipal.getUsername().equals(displayMessageDto.getOwner().getUsername()) || displayMessageDto.getAllowedUsers().contains(myUserPrincipal.getUsername());
+    }
+    @GetMapping(value ="manage/{id}")
+    String managePermissions(Model model, @PathVariable Long id){
+        DisplayMessageDto messageDto=messageService.getMessageById(id);
+        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<User> users=userRepository.findAll()
+                .stream()
+                .filter(u->!messageDto.getAllowedUsers().contains(u.getUsername()))
+                .filter(u->!myUserPrincipal.getUsername().equals(u.getUsername())).collect(Collectors.toList());
+        model.addAttribute("remainingUsers",users);
+        model.addAttribute("message",messageDto);
+        model.addAttribute("id",id);
+        return "manage";
     }
 }
