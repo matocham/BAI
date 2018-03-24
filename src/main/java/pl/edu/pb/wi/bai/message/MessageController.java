@@ -9,8 +9,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
-import pl.edu.pb.wi.bai.security.MyUserPrincipal;
+import pl.edu.pb.wi.bai.security.SecurityPrincipal;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collector;
@@ -19,13 +20,19 @@ import java.util.stream.Collectors;
 @Controller
 public class MessageController {
 
-    @Autowired
+    private static final String LOGIN_DATE = "loginDate";
+	@Autowired
     MessageService messageService;
     @Autowired
     UserRepository userRepository;
     @RequestMapping(value = {"/index", "/"})
-    String index(Model model) {
+    String index(Model model, HttpSession session) {
         model.addAttribute("posts", messageService.getAllMessages());
+        Object lastLoginDate = session.getAttribute(LOGIN_DATE);
+        if(lastLoginDate != null) {
+        	model.addAttribute(LOGIN_DATE, lastLoginDate);
+        	session.removeAttribute(LOGIN_DATE);
+        }
         return "index";
     }
 
@@ -50,7 +57,7 @@ public class MessageController {
     String editMessage(Model model, @PathVariable Long id) {
         EditMessageDto messageDto = new EditMessageDto();
         DisplayMessageDto displayMessageDto = messageService.getMessageById(id);
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (hasPermission(displayMessageDto, myUserPrincipal)) {
             messageDto.setText(displayMessageDto.getText());
             messageDto.setId(displayMessageDto.getId());
@@ -63,7 +70,7 @@ public class MessageController {
     @PostMapping(value = "/edit")
     String processEditMessage(@ModelAttribute("message") @Valid EditMessageDto editMessageDto, BindingResult result) {
         DisplayMessageDto displayMessageDto = messageService.getMessageById(editMessageDto.getId());
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (result.hasErrors()) {
             return "editMessage";
         }
@@ -77,14 +84,14 @@ public class MessageController {
         messageService.deleteMessage(id);
         return "redirect:/index";
     }
-    private boolean hasPermission(DisplayMessageDto displayMessageDto, MyUserPrincipal myUserPrincipal) {
+    private boolean hasPermission(DisplayMessageDto displayMessageDto, SecurityPrincipal myUserPrincipal) {
 
         return myUserPrincipal.getUsername().equals(displayMessageDto.getOwner().getUsername()) || displayMessageDto.getAllowedUsers().contains(myUserPrincipal.getUsername());
     }
     @GetMapping(value ="manage/{id}")
     String managePermissions(Model model, @PathVariable Long id){
         DisplayMessageDto messageDto=messageService.getMessageById(id);
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<User> users=userRepository.findAll()
                 .stream()
                 .filter(u->!messageDto.getAllowedUsers().contains(u.getUsername()))
@@ -93,5 +100,10 @@ public class MessageController {
         model.addAttribute("message",messageDto);
         model.addAttribute("id",id);
         return "manage";
+    }
+
+    @PostMapping(value ="manage")
+    String managePermissions2(@ModelAttribute(name = "action") String value){
+        return "index";
     }
 }

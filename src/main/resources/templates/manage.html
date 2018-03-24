@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class='panel panel-default' th:each="user : ${message.allowedUsers}">
-                    <button type="submit" name="action" value="${user}" th:text="inline" class="btn btn-danger" aria-label="Left Align"> [[${user}]]
+                    <button type="submit" name="action" th:value="${user}" th:inline="text" class="btn btn-danger" aria-label="Left Align"> [[${user}]]
                         <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                 </div>
 

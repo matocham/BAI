@@ -61,6 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new AuthenticationDateLogHandler();
+        return new AuthenticationSuccessLogHandler();
     }
 }

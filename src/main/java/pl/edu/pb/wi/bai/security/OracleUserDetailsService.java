@@ -19,6 +19,6 @@ public class OracleUserDetailsService implements UserDetailsService{
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new MyUserPrincipal(user.getPassword(), user.getUsername());
+        return new SecurityPrincipal(user);
     }
 }

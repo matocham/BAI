@@ -8,7 +8,7 @@ import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.AllowedMessageRepository;
 import pl.edu.pb.wi.bai.repositories.MessageRepository;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
-import pl.edu.pb.wi.bai.security.MyUserPrincipal;
+import pl.edu.pb.wi.bai.security.SecurityPrincipal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class MessageService {
     public void newMessage(String textMessage){
         Message message =new Message();
         message.setText(textMessage);
-        MyUserPrincipal myUserPrincipal=(MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user=userRepository.findByUsername(myUserPrincipal.getUsername());
         message.setModerator(user);
         messageRepository.save(message);
@@ -78,7 +78,7 @@ public class MessageService {
     }
     public void deleteMessage(Long id){
         Message message= messageRepository.findOne(id);
-        MyUserPrincipal myUserPrincipal=(MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(message.getModerator().getUsername().equals(myUserPrincipal.getUsername())){
             messageRepository.delete(id);
         }

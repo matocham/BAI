@@ -21,6 +21,15 @@ public class User implements Serializable{
     @Column(name = "LAST_LOGIN")
     Date lastLoginDate;
 
+    @Column(name="FAILED_LOGINS")
+    Integer loginAttempts;
+    
+    @Column(name= "FAILED_LOGIN_DATE")
+    Date lastFailedLogin;
+    
+    @Column(name="MAX_LOGIN_ATT")
+    Integer maxLoginAttempts;
+    
     public Long getId() {
         return id;
     }
@@ -53,13 +62,35 @@ public class User implements Serializable{
         this.lastLoginDate = lastLoginDate;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", lastLoginDate=" + lastLoginDate +
-                '}';
-    }
+	public Integer getLoginAttempts() {
+		return loginAttempts;
+	}
+
+	public void setLoginAttempts(Integer loginAttempts) {
+		this.loginAttempts = loginAttempts;
+	}
+
+	public Date getLastFailedLogin() {
+		return lastFailedLogin;
+	}
+
+	public void setLastFailedLogin(Date lastFailedLogin) {
+		this.lastFailedLogin = lastFailedLogin;
+	}
+
+	public Integer getMaxLoginAttempts() {
+		return maxLoginAttempts;
+	}
+
+	public void setMaxLoginAttempts(Integer maxLoginAttempts) {
+		this.maxLoginAttempts = maxLoginAttempts;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastLoginDate="
+				+ lastLoginDate + ", loginAttempts=" + loginAttempts + ", lastFailedLogin=" + lastFailedLogin + "]";
+	}
+    
+	
 }
