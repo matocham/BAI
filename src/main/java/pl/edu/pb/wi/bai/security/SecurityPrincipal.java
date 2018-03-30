@@ -8,6 +8,7 @@ import java.util.Date;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
@@ -28,6 +29,18 @@ public class SecurityPrincipal implements UserDetails {
 		}
 	}
 
+	public SecurityPrincipal(BadUser bUser) {
+		this.password = bUser.getPassword();
+		this.username = bUser.getUsername();
+		isAccountBlocked = bUser.getLoginAttempts() >= bUser.getMaxLoginAttempts();
+		Date lastFailedLogin = bUser.getLastFailedLogin();
+		if (lastFailedLogin != null) {
+			Date currentTime = Calendar.getInstance().getTime();
+			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
+			isExpired = timeDifference < bUser.getLoginAttempts();
+		}
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.emptyList();
