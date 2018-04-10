@@ -17,27 +17,51 @@
                     <span th:text="${message.text}"></span>
                 </div>
             </div>
-            <form id="registerForm" method="post" class="form-horizontal" th:action="@{/manage}">
+            <a th:if="${!remainingUsers.empty}">
+            <form id="manageForm" method="post" class="form-horizontal" th:action="@{/manage}">
                 <div class="form-group row">
                     <label class="col-sm-2 control-label">Wybierz użytkownika</label>
                     <div class="col-sm-10">
-                        <select name="newPermission" id="newPermission" class="form-control ">
+                        <select  name="newPermission" id="newPermission" class="form-control ">
                             <option th:each="person : ${remainingUsers}" th:value="${person.id}" th:text="${person.username}">
                             </option>
                         </select>
                     </div>
                 </div>
+<<<<<<< Updated upstream
                 <div class='panel panel-default' th:each="user : ${message.allowedUsers}">
                     <button type="submit" name="action" th:value="${user}" th:inline="text" class="btn btn-danger" aria-label="Left Align"> [[${user}]]
                         <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </div>
-
+=======
                 <div class="form-group row">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary addProductButton">Dodaj</button>
+                        <button type="submit" class="btn btn-primary addPermission" name="addPermission">Dodaj uprawnienie do edycji</button>
                     </div>
                 </div>
+                <input type="hidden" name="id" th:value="${id}"/>
             </form>
+            </a>
+            <a th:if="${!message.allowedUsers.empty}">
+            <form id="deleteForm" method="post" class="form-horizontal" th:action="@{/delete}">
+                <div class="form-group row">
+                    <label class="col-sm-2 control-label">Wybierz użytkownika</label>
+                    <div class="col-sm-10">
+                        <select  name="deletePermission" id="deletePermission" class="form-control ">
+                            <option th:each="person : ${message.allowedUsers}" th:value="${person}" th:text="${person}">
+                            </option>
+                        </select>
+                    </div>
+>>>>>>> Stashed changes
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-danger addPermission" name="deletePermission">Usuń uprawnienie do edycji</button>
+                    </div>
+                </div>
+
+                <input type="hidden" name="id" th:value="${id}"/>
+            </form>
+            </a>
         </div>
     </div>
 </div>

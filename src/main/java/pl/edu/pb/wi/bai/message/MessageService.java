@@ -3,6 +3,8 @@ package pl.edu.pb.wi.bai.message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.edu.pb.wi.bai.models.AllowedMessage;
+import pl.edu.pb.wi.bai.models.AllowedMessagesPK;
 import pl.edu.pb.wi.bai.models.Message;
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.AllowedMessageRepository;
@@ -25,7 +27,7 @@ public class MessageService {
     @Autowired
     UserRepository userRepository;
 
-    public List<DisplayMessageDto> getAllMessages(){
+    public List<DisplayMessageDto> getAllMessages() {
         List<DisplayMessageDto> resultingMessages = new ArrayList<>();
         List<Message> allMessages = messageRepository.findAll();
 
@@ -46,16 +48,23 @@ public class MessageService {
         }
         return resultingMessages;
     }
-    public void newMessage(String textMessage){
-        Message message =new Message();
+
+    public void newMessage(String textMessage) {
+        Message message = new Message();
         message.setText(textMessage);
+<<<<<<< Updated upstream
         SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user=userRepository.findByUsername(myUserPrincipal.getUsername());
+=======
+        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(myUserPrincipal.getUsername());
+>>>>>>> Stashed changes
         message.setModerator(user);
         messageRepository.save(message);
     }
-    public DisplayMessageDto getMessageById(Long id){
-        Message msg= messageRepository.findOne(id);
+
+    public DisplayMessageDto getMessageById(Long id) {
+        Message msg = messageRepository.findOne(id);
         DisplayMessageDto displayMessageDto = new DisplayMessageDto();
         displayMessageDto.setText(msg.getText());
         displayMessageDto.setId(msg.getMessageId());
@@ -71,16 +80,51 @@ public class MessageService {
         return displayMessageDto;
 
     }
-    public void editMessage(EditMessageDto editMessageDto){
-        Message message =messageRepository.findOne(editMessageDto.getId());
+
+    public void editMessage(EditMessageDto editMessageDto) {
+        Message message = messageRepository.findOne(editMessageDto.getId());
         message.setText(editMessageDto.getText());
         messageRepository.save(message);
     }
+<<<<<<< Updated upstream
     public void deleteMessage(Long id){
         Message message= messageRepository.findOne(id);
         SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(message.getModerator().getUsername().equals(myUserPrincipal.getUsername())){
+=======
+
+    public void deleteMessage(Long id) {
+        Message message = messageRepository.findOne(id);
+        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
+>>>>>>> Stashed changes
             messageRepository.delete(id);
+        }
+    }
+
+    public void addPermission(Long messageId, Long userToAddPermissionId) {
+        Message message = messageRepository.findOne(messageId);
+        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
+            User user = userRepository.findOne(userToAddPermissionId);
+            if(allowedMessageRepository.findByAllowedId_MessageIdAndAllowedId_UserId(message,user)==null&&!myUserPrincipal.getUsername().equals(user.getUsername())){//czy uprawnienia już nie są nadane oraz czy podany user nie jest włascicielem
+            AllowedMessagesPK allowedMessagesPK = new AllowedMessagesPK();
+            allowedMessagesPK.setMessageId(message);
+            allowedMessagesPK.setUserId(user);
+            AllowedMessage allowedMessage = new AllowedMessage();
+            allowedMessage.setAllowedId(allowedMessagesPK);
+            allowedMessageRepository.save(allowedMessage);
+            }
+        }
+    }
+    public void deletePermission(Long messageId, String userToDeletePermissionName) {
+        Message message = messageRepository.findOne(messageId);
+        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
+            User user = userRepository.findByUsername(userToDeletePermissionName);
+            if(allowedMessageRepository.findByAllowedId_MessageIdAndAllowedId_UserId(message,user)!=null&&!myUserPrincipal.getUsername().equals(user.getUsername())) {
+                allowedMessageRepository.deleteAllowedMessageByAllowedId_MessageIdAndAllowedId_UserId(message, user);
+            }
         }
     }
 }

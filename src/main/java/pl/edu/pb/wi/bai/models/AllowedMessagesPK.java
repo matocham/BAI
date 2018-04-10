@@ -8,13 +8,14 @@ import java.util.Set;
  * Created by justys on 05.03.2018.
  */
 @Embeddable
-public class AllowedMessagesPK implements Serializable{
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,targetEntity = User.class)
+public class AllowedMessagesPK implements Serializable {
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "USER_ID")
     User userId;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,targetEntity = Message.class)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Message.class)
     @JoinColumn(name = "MESSAGE_ID")
     Message messageId;
+
 
     public User getUserId() {
         return userId;

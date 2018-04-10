@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pb.wi.bai.models.AllowedMessage;
+import pl.edu.pb.wi.bai.models.AllowedMessagesPK;
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
 import pl.edu.pb.wi.bai.security.SecurityPrincipal;
@@ -79,7 +81,7 @@ public class MessageController {
         }
         return "redirect:/index";
     }
-    @GetMapping(value="/delete/{id}")
+    @PostMapping(value="/delete/{id}")
     String deleteMessage(@PathVariable Long id){
         messageService.deleteMessage(id);
         return "redirect:/index";
@@ -101,9 +103,24 @@ public class MessageController {
         model.addAttribute("id",id);
         return "manage";
     }
+<<<<<<< Updated upstream
 
     @PostMapping(value ="manage")
     String managePermissions2(@ModelAttribute(name = "action") String value){
         return "index";
     }
+=======
+    @PostMapping(value = "manage")
+    String newPermission(@ModelAttribute(name="newPermission")String userToAddPermissionString, @ModelAttribute(name = "id") Long messageId){
+        Long userToAddPermission=Long.parseLong(userToAddPermissionString);
+        messageService.addPermission(messageId,userToAddPermission);
+        return "redirect:/manage/"+messageId;
+    }
+    @PostMapping(value = "delete")
+    String deletePermission(@ModelAttribute(name="deletePermission")String userToDeletePermissionString, @ModelAttribute(name = "id") Long messageId){
+        messageService.deletePermission(messageId,userToDeletePermissionString);
+        return "redirect:/manage/"+messageId;
+    }
+
+>>>>>>> Stashed changes
 }
