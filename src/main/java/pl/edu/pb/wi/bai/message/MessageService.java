@@ -52,13 +52,8 @@ public class MessageService {
     public void newMessage(String textMessage) {
         Message message = new Message();
         message.setText(textMessage);
-<<<<<<< Updated upstream
         SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user=userRepository.findByUsername(myUserPrincipal.getUsername());
-=======
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(myUserPrincipal.getUsername());
->>>>>>> Stashed changes
         message.setModerator(user);
         messageRepository.save(message);
     }
@@ -86,25 +81,20 @@ public class MessageService {
         message.setText(editMessageDto.getText());
         messageRepository.save(message);
     }
-<<<<<<< Updated upstream
-    public void deleteMessage(Long id){
-        Message message= messageRepository.findOne(id);
-        SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(message.getModerator().getUsername().equals(myUserPrincipal.getUsername())){
-=======
+
 
     public void deleteMessage(Long id) {
         Message message = messageRepository.findOne(id);
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
->>>>>>> Stashed changes
+                SecurityPrincipal myUserPrincipal=(SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                if(message.getModerator().getUsername().equals(myUserPrincipal.getUsername())){
+
             messageRepository.delete(id);
         }
     }
 
     public void addPermission(Long messageId, Long userToAddPermissionId) {
         Message message = messageRepository.findOne(messageId);
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
             User user = userRepository.findOne(userToAddPermissionId);
             if(allowedMessageRepository.findByAllowedId_MessageIdAndAllowedId_UserId(message,user)==null&&!myUserPrincipal.getUsername().equals(user.getUsername())){//czy uprawnienia już nie są nadane oraz czy podany user nie jest włascicielem
@@ -119,7 +109,7 @@ public class MessageService {
     }
     public void deletePermission(Long messageId, String userToDeletePermissionName) {
         Message message = messageRepository.findOne(messageId);
-        MyUserPrincipal myUserPrincipal = (MyUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
             User user = userRepository.findByUsername(userToDeletePermissionName);
             if(allowedMessageRepository.findByAllowedId_MessageIdAndAllowedId_UserId(message,user)!=null&&!myUserPrincipal.getUsername().equals(user.getUsername())) {

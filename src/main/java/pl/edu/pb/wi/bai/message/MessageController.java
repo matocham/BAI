@@ -103,13 +103,7 @@ public class MessageController {
         model.addAttribute("id",id);
         return "manage";
     }
-<<<<<<< Updated upstream
 
-    @PostMapping(value ="manage")
-    String managePermissions2(@ModelAttribute(name = "action") String value){
-        return "index";
-    }
-=======
     @PostMapping(value = "manage")
     String newPermission(@ModelAttribute(name="newPermission")String userToAddPermissionString, @ModelAttribute(name = "id") Long messageId){
         Long userToAddPermission=Long.parseLong(userToAddPermissionString);
@@ -121,6 +115,4 @@ public class MessageController {
         messageService.deletePermission(messageId,userToDeletePermissionString);
         return "redirect:/manage/"+messageId;
     }
-
->>>>>>> Stashed changes
 }
