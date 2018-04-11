@@ -28,17 +28,12 @@
                         </select>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-                <div class='panel panel-default' th:each="user : ${message.allowedUsers}">
-                    <button type="submit" name="action" th:value="${user}" th:inline="text" class="btn btn-danger" aria-label="Left Align"> [[${user}]]
-                        <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-=======
+                <input type="hidden" name="id" th:value="${id}"/>
                 <div class="form-group row">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary addPermission" name="addPermission">Dodaj uprawnienie do edycji</button>
+                        <button type="submit" class="btn btn-success addPermission" name="addPermission">Dodaj uprawnienie do edycji</button>
                     </div>
                 </div>
-                <input type="hidden" name="id" th:value="${id}"/>
             </form>
             </a>
             <a th:if="${!message.allowedUsers.empty}">
@@ -51,7 +46,6 @@
                             </option>
                         </select>
                     </div>
->>>>>>> Stashed changes
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-offset-2 col-sm-10">

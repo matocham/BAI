@@ -22,6 +22,8 @@ public class RegisterService {
         user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
+        user.setLoginAttempts(0);
+        user.setMaxLoginAttempts(10);
         userRepository.save(user);
         return user;
     }
