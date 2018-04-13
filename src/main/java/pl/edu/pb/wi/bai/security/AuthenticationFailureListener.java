@@ -55,4 +55,5 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 		badUser.setMaxLoginAttempts(rand.nextInt(8) + 3); // 3-10
 		badUserRepository.save(badUser);
 	}
+	
 }
