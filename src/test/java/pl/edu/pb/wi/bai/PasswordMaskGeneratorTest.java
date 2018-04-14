@@ -11,7 +11,7 @@ public class PasswordMaskGeneratorTest {
 
 	@Before
 	public void setUp() {
-		generator = new PasswordMaskGenerator(16, 10);
+		generator = new PasswordMaskGenerator("password1".length(), 10);
 	}
 
 	@Test
@@ -30,10 +30,13 @@ public class PasswordMaskGeneratorTest {
 
 	@Test
 	public void shouldGenerateMasksBetween5And8() {
-		String[] masks = generator.getMasks();
-		for (int i = 0; i < masks.length; i++) {
-			int onesCount = masks[i].replaceAll("0", "").length();
-			assertThat(onesCount).isBetween(5, 8);
+		for (int j = 0; j < 100; j++) {
+			String[] masks = generator.getMasks();
+			for (int i = 0; i < masks.length; i++) {
+				int onesCount = masks[i].replaceAll("0", "").length();
+					
+				assertThat(onesCount).isBetween(5, 8);
+			} 
 		}
 	}
 

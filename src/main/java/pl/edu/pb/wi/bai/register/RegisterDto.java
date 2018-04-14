@@ -1,10 +1,11 @@
 package pl.edu.pb.wi.bai.register;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @PasswordMatch(message = "Hasła muszą pasować")
 public class RegisterDto {
@@ -15,12 +16,12 @@ public class RegisterDto {
 
     @NotNull
     @NotEmpty
-    @Size(min = 6, max = 32, message = "Hasło powinno mieć od 6 do 32 znaków")
+    @Size(min = 8, max = 16, message = "Hasło powinno mieć od 6 do 32 znaków")
     private String password;
 
     @NotNull
     @NotEmpty
-    @Size(min = 6, max = 32, message = "Hasło powinno mieć od 6 do 32 znaków")
+    @Size(min = 8, max = 16, message = "Hasło powinno mieć od 6 do 32 znaków")
     private String passwordRepeat;
 
     public RegisterDto() {

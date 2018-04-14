@@ -1,66 +1,70 @@
 package pl.edu.pb.wi.bai.models;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "USERS")
-public class User implements Serializable{
+public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
-    @SequenceGenerator(name = "USERS_SEQ", sequenceName = "users_seq")
-    @Column(name = "USER_ID")
-    Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
+	@SequenceGenerator(name = "USERS_SEQ", sequenceName = "users_seq")
+	@Column(name = "USER_ID")
+	Long id;
 
-    @Column(name = "LOGIN")
-    String username;
-    @Column(name = "PASSWORD_HASH")
-    String password;
-    @Column(name = "LAST_LOGIN")
-    Date lastLoginDate;
+	@Column(name = "LOGIN")
+	String username;
 
-    @Column(name="FAILED_LOGINS")
-    Integer loginAttempts;
-    
-    @Column(name= "FAILED_LOGIN_DATE")
-    Date lastFailedLogin;
-    
-    @Column(name="MAX_LOGIN_ATT")
-    Integer maxLoginAttempts;
-    
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "LAST_LOGIN")
+	Date lastLoginDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "FAILED_LOGINS")
+	Integer loginAttempts;
 
-    public String getUsername() {
-        return username;
-    }
+	@Column(name = "FAILED_LOGIN_DATE")
+	Date lastFailedLogin;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	@Column(name = "MAX_LOGIN_ATT")
+	Integer maxLoginAttempts;
 
-    public String getPassword() {
-        return password;
-    }
+	@OneToOne()
+	@JoinColumn(name = "CURRENT_MASK")
+	Password currentPassword;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Date getLastLoginDate() {
-        return lastLoginDate;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setLastLoginDate(Date lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
-    }
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
 
 	public Integer getLoginAttempts() {
 		return loginAttempts;
@@ -86,18 +90,19 @@ public class User implements Serializable{
 		this.maxLoginAttempts = maxLoginAttempts;
 	}
 
-	
+	public Password getCurrentPassword() {
+		return currentPassword;
+	}
+
+	public void setCurrentPassword(Password currentPassword) {
+		this.currentPassword = currentPassword;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((lastFailedLogin == null) ? 0 : lastFailedLogin.hashCode());
-		result = prime * result + ((lastLoginDate == null) ? 0 : lastLoginDate.hashCode());
-		result = prime * result + ((loginAttempts == null) ? 0 : loginAttempts.hashCode());
-		result = prime * result + ((maxLoginAttempts == null) ? 0 : maxLoginAttempts.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -115,44 +120,14 @@ public class User implements Serializable{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (lastFailedLogin == null) {
-			if (other.lastFailedLogin != null)
-				return false;
-		} else if (!lastFailedLogin.equals(other.lastFailedLogin))
-			return false;
-		if (lastLoginDate == null) {
-			if (other.lastLoginDate != null)
-				return false;
-		} else if (!lastLoginDate.equals(other.lastLoginDate))
-			return false;
-		if (loginAttempts == null) {
-			if (other.loginAttempts != null)
-				return false;
-		} else if (!loginAttempts.equals(other.loginAttempts))
-			return false;
-		if (maxLoginAttempts == null) {
-			if (other.maxLoginAttempts != null)
-				return false;
-		} else if (!maxLoginAttempts.equals(other.maxLoginAttempts))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastLoginDate="
-				+ lastLoginDate + ", loginAttempts=" + loginAttempts + ", lastFailedLogin=" + lastFailedLogin + "]";
+		return "User [id=" + id + ", username=" + username + ", lastLoginDate=" + lastLoginDate + ", loginAttempts="
+				+ loginAttempts + ", lastFailedLogin=" + lastFailedLogin + ", maxLoginAttempts=" + maxLoginAttempts
+				+ ", currentMask=" + currentPassword + "]";
 	}
-    
-	
+
 }

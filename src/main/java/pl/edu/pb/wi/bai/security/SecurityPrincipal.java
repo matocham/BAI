@@ -18,7 +18,7 @@ public class SecurityPrincipal implements UserDetails {
 	private boolean isExpired = false;
 
 	public SecurityPrincipal(User user) {
-		this.password = user.getPassword();
+		this.password = user.getCurrentPassword().getPassword();
 		this.username = user.getUsername();
 		isAccountBlocked = user.getLoginAttempts() >= user.getMaxLoginAttempts();
 		Date lastFailedLogin = user.getLastFailedLogin();
@@ -30,7 +30,7 @@ public class SecurityPrincipal implements UserDetails {
 	}
 
 	public SecurityPrincipal(BadUser bUser) {
-		this.password = bUser.getPassword();
+		this.password = bUser.getPassword().getPassword();
 		this.username = bUser.getUsername();
 		isAccountBlocked = bUser.getLoginAttempts() >= bUser.getMaxLoginAttempts();
 		Date lastFailedLogin = bUser.getLastFailedLogin();

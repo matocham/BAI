@@ -15,24 +15,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BAD_USERS")
-public class BadUser implements Serializable{
+public class BadUser implements Serializable {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BAD_USERS_SEQ")
-    @SequenceGenerator(name = "BAD_USERS_SEQ", sequenceName = "bad_users_seq")
-    @Column(name = "USER_ID")
-    Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BAD_USERS_SEQ")
+	@SequenceGenerator(name = "BAD_USERS_SEQ", sequenceName = "bad_users_seq")
+	@Column(name = "USER_ID")
+	Long id;
 
-    @Column(name = "LOGIN")
-    String username;
-   
-    @Column(name="FAILED_LOGINS")
-    Integer loginAttempts;
-    
-    @Column(name= "FAILED_LOGIN_DATE")
-    Date lastFailedLogin;
-    
-    @Column(name="MAX_LOGIN_ATT")
-    Integer maxLoginAttempts;
+	@Column(name = "LOGIN")
+	String username;
+
+	@Column(name = "FAILED_LOGINS")
+	Integer loginAttempts;
+
+	@Column(name = "FAILED_LOGIN_DATE")
+	Date lastFailedLogin;
+
+	@Column(name = "MAX_LOGIN_ATT")
+	Integer maxLoginAttempts;
+
+	@Column(name = "PASSWORD_MASK")
+	String currentMask;
 
 	public Long getId() {
 		return id;
@@ -73,10 +76,21 @@ public class BadUser implements Serializable{
 	public void setMaxLoginAttempts(Integer maxLoginAttempts) {
 		this.maxLoginAttempts = maxLoginAttempts;
 	}
-	
+
 	@Transient
-	public String getPassword() {
-		return UUID.randomUUID().toString();
+	public Password getPassword() {
+		Password p = new Password();
+		p.setMask(getCurrentMask());
+		p.setPassword(UUID.randomUUID().toString());
+		return p;
+	}
+
+	public String getCurrentMask() {
+		return currentMask;
+	}
+
+	public void setCurrentMask(String currentMask) {
+		this.currentMask = currentMask;
 	}
 
 	@Override
@@ -84,10 +98,6 @@ public class BadUser implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((lastFailedLogin == null) ? 0 : lastFailedLogin.hashCode());
-		result = prime * result + ((loginAttempts == null) ? 0 : loginAttempts.hashCode());
-		result = prime * result + ((maxLoginAttempts == null) ? 0 : maxLoginAttempts.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -105,34 +115,13 @@ public class BadUser implements Serializable{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (lastFailedLogin == null) {
-			if (other.lastFailedLogin != null)
-				return false;
-		} else if (!lastFailedLogin.equals(other.lastFailedLogin))
-			return false;
-		if (loginAttempts == null) {
-			if (other.loginAttempts != null)
-				return false;
-		} else if (!loginAttempts.equals(other.loginAttempts))
-			return false;
-		if (maxLoginAttempts == null) {
-			if (other.maxLoginAttempts != null)
-				return false;
-		} else if (!maxLoginAttempts.equals(other.maxLoginAttempts))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "BadUser [id=" + id + ", username=" + username + ", loginAttempts=" + loginAttempts
-				+ ", lastFailedLogin=" + lastFailedLogin + ", maxLoginAttempts=" + maxLoginAttempts + "]";
+				+ ", lastFailedLogin=" + lastFailedLogin + ", maxLoginAttempts=" + maxLoginAttempts + ", currentMask="
+				+ currentMask + "]";
 	}
-    
-    
 }

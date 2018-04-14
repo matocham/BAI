@@ -13,12 +13,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import pl.edu.pb.wi.bai.repositories.PasswordRepository;
+import pl.edu.pb.wi.bai.repositories.UserRepository;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OracleUserDetailsService oracleUserDetailsService;
-
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    PasswordRepository passwordRepository;
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -61,6 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new AuthenticationSuccessLogHandler();
+        return new AuthenticationSuccessLogHandler(userRepository, passwordRepository);
     }
 }
