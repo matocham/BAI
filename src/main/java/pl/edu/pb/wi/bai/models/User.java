@@ -3,6 +3,7 @@ package pl.edu.pb.wi.bai.models;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +39,7 @@ public class User implements Serializable {
 	@Column(name = "MAX_LOGIN_ATT")
 	Integer maxLoginAttempts;
 
-	@OneToOne()
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "CURRENT_MASK")
 	Password currentPassword;
 

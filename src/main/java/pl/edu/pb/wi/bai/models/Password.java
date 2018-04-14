@@ -1,5 +1,6 @@
 package pl.edu.pb.wi.bai.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -26,7 +27,7 @@ public class Password {
     String password;
     
     @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "USERS_P__PK"))
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.REFRESH)
     User user;
     
 	public Long getId() {
