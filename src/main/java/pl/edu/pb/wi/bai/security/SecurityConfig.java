@@ -12,10 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import pl.edu.pb.wi.bai.repositories.PasswordRepository;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
-
+//TODO add username custom WebSecurityConfigurerAdapter
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+        	.addFilterBefore(new PasswordPreprocessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/login*", "/register*").anonymous()
                 .antMatchers("/", "/index").permitAll()
@@ -48,10 +50,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/403");
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
+    @Override
+    public void configure(AuthenticationManagerBuilder builder) {
+      builder.authenticationProvider(authenticationProvider());
     }
+    
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) {
+//        auth.authenticationProvider(authenticationProvider());
+//    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

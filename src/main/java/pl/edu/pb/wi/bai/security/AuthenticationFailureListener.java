@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
+import pl.edu.pb.wi.bai.PasswordMaskGenerator;
 import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.BadUserRepository;
@@ -47,13 +48,15 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 	}
 
 	private void createNewBadUser(String name) {
+		PasswordMaskGenerator generator = new PasswordMaskGenerator(new Random().nextInt(8) + 8, 1);
 		Random rand = new Random(System.currentTimeMillis());
 		BadUser badUser = new BadUser();
 		badUser.setUsername(name);
 		badUser.setLastFailedLogin(Calendar.getInstance().getTime());
 		badUser.setLoginAttempts(1);
+		badUser.setCurrentMask(generator.getMasks()[0]);
 		badUser.setMaxLoginAttempts(rand.nextInt(8) + 3); // 3-10
 		badUserRepository.save(badUser);
 	}
-	
+
 }
