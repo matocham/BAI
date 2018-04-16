@@ -42,7 +42,7 @@ public class OracleUserDetailsService implements UserDetailsService {
 	}
 	
 	private BadUser createNewBadUser(String name) {
-		PasswordMaskGenerator generator = new PasswordMaskGenerator(new Random().nextInt(8) + 8, 1);
+		PasswordMaskGenerator generator = new PasswordMaskGenerator(new Random(System.currentTimeMillis()).nextInt(8) + 8, 1);
 		Random rand = new Random(System.currentTimeMillis());
 		BadUser badUser = new BadUser();
 		badUser.setUsername(name);

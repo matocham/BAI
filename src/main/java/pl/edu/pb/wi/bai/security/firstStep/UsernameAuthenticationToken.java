@@ -30,11 +30,4 @@ public class UsernameAuthenticationToken extends AbstractAuthenticationToken {
 	public Object getPrincipal() {
 		return this.principal;
 	}
-
-	@Override
-	public void eraseCredentials() {
-		super.eraseCredentials();
-		principal = null;
-	}
-
 }

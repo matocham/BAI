@@ -27,13 +27,13 @@
             <div class="col-md-4 col-md-offset-1">
             </div>
             <div class="col-md-6 centered justFelexEnd">
-                <div sec:authorize="isAuthenticated()">
+                <div sec:authorize="hasRole('ROLE_USER')">
                     <div id="loginHolder" class="flexAlignedCenter">
                         <span id="loggeedAs">Witaj,&nbsp;<i sec:authentication="principal.username"></i></span>
                         <a id="logout" class="btn btn-default btn-block" href="#">Wyloguj się</a>
                     </div>
                 </div>
-                <div sec:authorize="isAnonymous()">
+                <div sec:authorize="isAnonymous() or hasRole('ROLE_PREAUTH')">
                     <div class="flexAlignedCenter" id="loginHolder">
                         <a class="btn btn-default btn-block" style="margin-top: 5px; margin-right: 5px" th:href="@{/register}">Zarejestruj się</a>
                         <a id="addItem" class="btn btn-default btn-block" style="margin-left: auto" th:href="@{/login}">Zaloguj się</a>

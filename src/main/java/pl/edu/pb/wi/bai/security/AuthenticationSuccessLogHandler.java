@@ -49,7 +49,7 @@ public class AuthenticationSuccessLogHandler extends SavedRequestAwareAuthentica
 
 		List<Password> partialPasswords = passwordRepository.findByUser(user);
 		partialPasswords.remove(user.getCurrentPassword());
-		Password nextPartialPassword = partialPasswords.get(new Random().nextInt(partialPasswords.size()));
+		Password nextPartialPassword = partialPasswords.get(new Random(System.currentTimeMillis()).nextInt(partialPasswords.size()));
 		user.setCurrentPassword(nextPartialPassword);
 		userRepository.save(user);
 

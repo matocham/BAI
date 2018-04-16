@@ -25,7 +25,7 @@
                     </a>
                 </div>
             </div>
-            <div sec:authorize="isAuthenticated()" class="col-md-2 col-md-offset-8 centered" id="loginHolder">
+            <div sec:authorize="hasRole('ROLE_USER')" class="col-md-2 col-md-offset-8 centered" id="loginHolder">
                 <span id="loggeedAs" >Witaj,&nbsp;<i sec:authentication="principal.username"></i></span>
             </div>
         </div>

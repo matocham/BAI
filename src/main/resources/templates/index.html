@@ -10,14 +10,14 @@
         <div class="col-md-6 col-md-offset-3">
             <h2>Witamy w serwisie</h2>
             <div th:if="${loginDate != null}" class="alert alert-success" th:inline="text">Ostatnio zalogowano [[${#dates.format(loginDate, 'dd-MM-yyyy HH:mm')}]]</div>
-            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="addPostButton" th:href="@{/addMessage}">Dodaj post</a>
+            <a sec:authorize="hasRole('ROLE_USER')" class="btn btn-default" id="addPostButton" th:href="@{/addMessage}">Dodaj post</a>
             <div id="addverts">
                 <div class='panel panel-default' th:each="message : ${posts}">
                     <div class='row addContainer vertical-align'>
                         <div class='col-md-12'>
                             <span class='msgBody' th:text="${message.text}"></span>
                             <div class='h6 owner'><span th:text="'Wystawione przez: ' + ${message.owner.username}"></span></div>
-                            <div sec:authorize="isAuthenticated()">
+                            <div sec:authorize="hasRole('ROLE_USER')">
                                 <a th:if="${#lists.contains(message.allowedUsers, #authentication.principal.username) or #authentication.principal.username == message.owner.username}" class="btn btn-default btn-success" th:href="@{/edit/{id}(id=${message.id})}">Edytuj</a>
                                 <a th:if="${#authentication.principal.username == message.owner.username}" class="btn btn-default btn-warning" th:href="@{/manage/{id}(id=${message.id})}">Zarządzaj</a>
                                 <a th:if="${#authentication.principal.username == message.owner.username}" class="btn btn-default btn-danger" th:href="@{/delete/{id}(id=${message.id})}">Usuń</a>

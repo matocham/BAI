@@ -7,20 +7,18 @@
     <div th:replace="baseNoCategories :: header"></div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form method="post" class="form-horizontal" th:action="@{/login}" action="#">
+            <form method="post" class="form-horizontal" th:action="@{/secondLoginStep}" action="#">
                 <h1>Login form</h1>
-                <div th:if="${param.logout}" class="alert alert-success">Wylogowano pomyślnie</div>
-                <div th:if="${param.error}" class="alert alert-danger">Nieprawidłowa nazwa użytkownika lub hasło</div>
                 <div class="form-group">
-                    <label for="username">Login</label>
+                    <label for="password">Password</label>
                     <div class="input-group">
-                        <span class="input-group-addon glyphicon glyphicon-user"></span>
-                        <input class="form-control" id="username" name="username" type="text" placeholder="username"/>
+                        <span class="input-group-addon glyphicon glyphicon-lock"></span>
+                        <input class="form-control" id="password" type="password" name="password" placeholder="password"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-1 col-md-1">
-                        <button type="submit" class="btn btn-primary">Dalej</button>
+                        <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </div>
             </form>

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
@@ -19,33 +20,44 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PasswordAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 	private final UserDetailsService userDetailsService;
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
 	private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
-
-	public PasswordAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+	private final DefaultAuthenticationEventPublisher publisher;
+	
+	public PasswordAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, DefaultAuthenticationEventPublisher publisher) {
 		this.passwordEncoder = passwordEncoder;
 		this.userDetailsService = userDetailsService;
+		this.publisher = publisher;
 	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		PasswordAuthenticationToken token = (PasswordAuthenticationToken) authentication;
 		UserDetails user = getUserDetails(token.getPrincipal().toString());
-		if (user == null) {
-			throw new BadCredentialsException(
-					messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+		try {
+			if (user == null) {
+				throw new BadCredentialsException(
+						messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+			}
+			preAuthenticationChecks.check(user);
+			additionalAuthenticationChecks(user, token);
+			postAuthenticationChecks.check(user);
+		} catch (AuthenticationException e) {
+			publisher.publishAuthenticationFailure(e, token);
+			throw e;
 		}
-		preAuthenticationChecks.check(user);
-		additionalAuthenticationChecks(user, token);
-		postAuthenticationChecks.check(user);
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		return new PasswordAuthenticationToken(user, token.getCredentials(), authorities);
+		Authentication auth = new PasswordAuthenticationToken(user, token.getCredentials(), authorities);
+		publisher.publishAuthenticationSuccess(auth);
+		return auth;
 	}
 
 	private UserDetails getUserDetails(String username) {

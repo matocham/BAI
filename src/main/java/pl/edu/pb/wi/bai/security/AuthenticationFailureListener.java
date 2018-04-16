@@ -1,19 +1,17 @@
 package pl.edu.pb.wi.bai.security;
 
 import java.util.Calendar;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
-import pl.edu.pb.wi.bai.PasswordMaskGenerator;
 import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.BadUserRepository;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
+import pl.edu.pb.wi.bai.security.secondStep.PasswordAuthenticationToken;
 
 @Component
 public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
@@ -25,7 +23,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 	private BadUserRepository badUserRepository;
 
 	public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent e) {
-		UsernamePasswordAuthenticationToken tk = (UsernamePasswordAuthenticationToken) e.getSource();
+		PasswordAuthenticationToken tk = (PasswordAuthenticationToken) e.getSource();
 		String username = tk.getName();
 		if (username == "" || username == null) {
 			username = OracleUserDetailsService.EMPTY_USERNAME;
@@ -41,22 +39,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 				bUser.setLoginAttempts(bUser.getLoginAttempts() + 1);
 				bUser.setLastFailedLogin(Calendar.getInstance().getTime());
 				badUserRepository.save(bUser);
-			} else {
-				createNewBadUser(username);
 			}
 		}
 	}
-
-	private void createNewBadUser(String name) {
-		PasswordMaskGenerator generator = new PasswordMaskGenerator(new Random().nextInt(8) + 8, 1);
-		Random rand = new Random(System.currentTimeMillis());
-		BadUser badUser = new BadUser();
-		badUser.setUsername(name);
-		badUser.setLastFailedLogin(Calendar.getInstance().getTime());
-		badUser.setLoginAttempts(1);
-		badUser.setCurrentMask(generator.getMasks()[0]);
-		badUser.setMaxLoginAttempts(rand.nextInt(8) + 3); // 3-10
-		badUserRepository.save(badUser);
-	}
-
 }

@@ -62,7 +62,7 @@ public class RegisterService {
 			p.setUser(user);
 			passwords.add(passwordRepository.save(p));
 		}
-		Password currentPass = passwords.get(new Random().nextInt(passwords.size()));
+		Password currentPass = passwords.get(new Random(System.currentTimeMillis()).nextInt(passwords.size()));
 		user.setCurrentPassword(currentPass);
 		userRepository.save(user);
 	}

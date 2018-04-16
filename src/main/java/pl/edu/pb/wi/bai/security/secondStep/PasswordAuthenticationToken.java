@@ -1,10 +1,10 @@
 package pl.edu.pb.wi.bai.security.secondStep;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class PasswordAuthenticationToken extends AbstractAuthenticationToken{
 	private Object principal;
@@ -35,5 +35,18 @@ public class PasswordAuthenticationToken extends AbstractAuthenticationToken{
 	public Object getPrincipal() {
 		return this.principal;
 	}
+
+	@Override
+	public String getName() {
+		if(principal instanceof String){
+			return (String) principal;
+		}
+		if(principal instanceof UserDetails) {
+			return ((UserDetails)principal).getUsername();
+		}
+		return "";
+	}
+	
+	
 
 }
