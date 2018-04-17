@@ -35,7 +35,7 @@ public class ClearPreAuthAuthorityFilter extends GenericFilterBean {
 	}
 
 	private boolean isStatic(String path) {
-		if(path.startsWith("/css") || path.startsWith("/js") || path.startsWith("/image") || path.startsWith("/webjars")) {
+		if(path.startsWith("/css") || path.startsWith("/js") || path.startsWith("/image") || path.startsWith("/webjars") || path.startsWith("/favicon.ico")) {
 			return true;
 		}
 		return false;
