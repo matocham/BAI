@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class UsernameAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -19,6 +20,15 @@ public class UsernameAuthenticationToken extends AbstractAuthenticationToken {
 		super(authorities);
 		this.principal = principal;
 		super.setAuthenticated(true);
+	}
+
+	@Override
+	public String getName() {
+		if (principal instanceof String) {
+			return (String) principal;
+		} else {
+			return ((UserDetails) principal).getUsername();
+		}
 	}
 
 	@Override

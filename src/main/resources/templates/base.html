@@ -30,7 +30,7 @@
                 <div sec:authorize="hasRole('ROLE_USER')">
                     <div id="loginHolder" class="flexAlignedCenter">
                         <span id="loggeedAs">Witaj,&nbsp;<i sec:authentication="principal.username"></i></span>
-                        <a id="logout" class="btn btn-default btn-block" href="#">Wyloguj się</a>
+                        <a id="logout" class="btn btn-default btn-block" th:href="@{/logout}">Wyloguj się</a>
                     </div>
                 </div>
                 <div sec:authorize="isAnonymous() or hasRole('ROLE_PREAUTH')">

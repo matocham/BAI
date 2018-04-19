@@ -3,18 +3,31 @@
 <head th:replace="baseNoCategories :: pageHead">
 </head>
 <body>
+<script>
+$.ready(function(){
+	setUpPasswordStep()
+	})
+</script>
 <div class="container-fluid">
     <div th:replace="baseNoCategories :: header"></div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form method="post" class="form-horizontal" th:action="@{/secondLoginStep}" action="#">
-                <h1>Login form</h1>
+                <h1>Login</h1>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-group">
-                        <span class="input-group-addon glyphicon glyphicon-lock"></span>
-                        <input class="form-control" id="password" type="password" name="password" placeholder="password"/>
-                    </div>
+	                <label for="pass0">Password</label>
+					<div class="input-group">
+					<span class="input-group-addon glyphicon glyphicon-lock"></span>
+					<input 
+						th:each="letter, iter : ${mask}" 
+						th:with="placeholder=${letter eq '0'}?'':${iter.index + 1}"
+						th:name="${'p' + iter.index}" 
+						th:placeholder="${placeholder}" 
+						th:attrappend="disabled=${letter eq '0'}?true"
+						th:id="${'pass' + iter.index}"
+						class="passwd form-control"
+						maxlength="1" type="password"/>
+					</div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-1 col-md-1">

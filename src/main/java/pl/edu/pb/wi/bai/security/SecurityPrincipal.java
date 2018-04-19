@@ -15,6 +15,7 @@ import pl.edu.pb.wi.bai.models.User;
 public class SecurityPrincipal implements UserDetails {
 	private String password;
 	private String username;
+	private String mask;
 	private boolean isAccountBlocked = false;
 	private boolean isExpired = false;
 
@@ -28,6 +29,7 @@ public class SecurityPrincipal implements UserDetails {
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
 			isExpired = timeDifference < user.getLoginAttempts();
 		}
+		this.mask = user.getCurrentPassword().getMask();
 	}
 
 	public SecurityPrincipal(BadUser bUser) {
@@ -40,6 +42,7 @@ public class SecurityPrincipal implements UserDetails {
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
 			isExpired = timeDifference < bUser.getLoginAttempts();
 		}
+		this.mask = bUser.getCurrentMask();
 	}
 	
 	@Override
@@ -75,5 +78,9 @@ public class SecurityPrincipal implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public String getMask() {
+		return mask;
 	}
 }
