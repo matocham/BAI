@@ -227,5 +227,8 @@
 }
 
 .passwd {
-	width: 30px !important;
+	width: 40px !important;
+	text-align: center;
+	padding-left:5px !important;
+	padding-right:5px !important;
 }

@@ -10,7 +10,6 @@ function bindLogoutButton(){
 
 function setUpPasswordStep(){
 	$("input[type='password']").on('keyup', function(ev){
-		$(ev.target).prop('disabled', true)
 	$next = $(ev.target).nextAll("input[type='password']:first")
 	while($next.prop('disabled') && $next.length > 0){
 		$next = $next.nextAll("input[type='password']:first")
@@ -22,6 +21,8 @@ function setUpPasswordStep(){
 	})
 
 	$("input[type='password']").on('focus', function(ev){
-		$(ev.target).val('')
+		ev.target.select()
 	})
+	
+	$("input:password").first().focus();
 }
