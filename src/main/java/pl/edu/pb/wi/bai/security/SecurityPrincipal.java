@@ -13,6 +13,7 @@ import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
+	private static final int DELY_MULTIPLIER = 100;
 	private String password;
 	private String username;
 	private String mask;
@@ -27,7 +28,7 @@ public class SecurityPrincipal implements UserDetails {
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < user.getLoginAttempts();
+			isExpired = timeDifference < user.getLoginAttempts()*DELY_MULTIPLIER;
 		}
 		this.mask = user.getCurrentPassword().getMask();
 	}
@@ -40,7 +41,7 @@ public class SecurityPrincipal implements UserDetails {
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < bUser.getLoginAttempts();
+			isExpired = timeDifference < bUser.getLoginAttempts()*DELY_MULTIPLIER;
 		}
 		this.mask = bUser.getCurrentMask();
 	}

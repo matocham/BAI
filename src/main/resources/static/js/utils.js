@@ -23,7 +23,6 @@ function setUpPasswordStep(){
 	$("input[type='password']").on('focus', function(ev){
 		ev.target.select()
 	})
-	
-	$("#secondForm input[type=password]").first().focus();
+	setTimeout(function(){$("#secondForm input[type=password]").first().focus();}, 500)
 	
 }
