@@ -56,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().formLogin().loginPage("/login")
 				.failureUrl("/login?error").defaultSuccessUrl("/secondLoginStep*")
 				.successHandler(new SecondStepRedirectLoginSuccessHandler())
-		.and().exceptionHandling().accessDeniedPage("/403");
+		.and().exceptionHandling().accessDeniedPage("/403")
+		.and().csrf().disable();
 	}
 
 	@Bean

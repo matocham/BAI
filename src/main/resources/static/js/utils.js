@@ -24,5 +24,6 @@ function setUpPasswordStep(){
 		ev.target.select()
 	})
 	
-	$("input:password").first().focus();
+	$("#secondForm input[type=password]").first().focus();
+	
 }

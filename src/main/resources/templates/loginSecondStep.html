@@ -12,12 +12,12 @@ $(function(){
     <div th:replace="baseNoCategories :: header"></div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form method="post" class="form-horizontal" th:action="@{/secondLoginStep}" action="#">
+            <form method="post" id = "secondForm" class="form-horizontal" th:action="@{/secondLoginStep}" action="#">
                 <h1>Login</h1>
                 <div class="form-group">
 	                <label for="pass0">Password</label>
 					<div class="input-group">
-					<span class="input-group-addon glyphicon glyphicon-lock"></span>
+					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
 					<input 
 						th:each="letter, iter : ${mask}" 
 						th:with="placeholder=${letter eq '0'}?'':${iter.index + 1}"

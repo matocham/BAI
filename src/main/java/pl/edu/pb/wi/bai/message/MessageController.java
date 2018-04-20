@@ -85,7 +85,7 @@ public class MessageController {
         }
         return "redirect:/index";
     }
-    @PostMapping(value="/delete/{id}")
+    @GetMapping(value="/delete/{id}")
     String deleteMessage(@PathVariable Long id){
         messageService.deleteMessage(id);
         return "redirect:/index";
