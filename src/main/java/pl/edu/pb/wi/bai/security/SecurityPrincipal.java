@@ -12,6 +12,7 @@ import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
+	public static final int DELY_MULTIPLIER = 100;
 	private String password;
 	private String username;
 	private boolean isAccountBlocked = false;
@@ -24,8 +25,8 @@ public class SecurityPrincipal implements UserDetails {
 		Date lastFailedLogin = user.getLastFailedLogin();
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
-			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < user.getLoginAttempts();
+			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime()) / 1000;
+			isExpired = timeDifference < user.getLoginAttempts() * DELY_MULTIPLIER;
 		}
 	}
 
@@ -36,11 +37,11 @@ public class SecurityPrincipal implements UserDetails {
 		Date lastFailedLogin = bUser.getLastFailedLogin();
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
-			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < bUser.getLoginAttempts();
+			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime()) / 1000;
+			isExpired = timeDifference < bUser.getLoginAttempts() * DELY_MULTIPLIER;
 		}
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.emptyList();
