@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="baseNoCategories :: pageHead">
+</head>
+<body>
+<script type="application/javascript" th:inline="javascript"></script>
+
+<div class="container-fluid">
+    <div th:replace="baseNoCategories :: header"></div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form id="resetUserAttempts" method="post" class="form-horizontal" th:action="@{/resetUserAttempts}">
+                <div class="form-group row">
+                    <label class="col-sm-2 control-label">Wybierz użytkownika</label>
+                    <div class="col-sm-10">
+                        <select name="resetUser" id="resetUser" class="form-control ">
+                            <option th:each="person : ${users}" th:value="${person.id}"
+                                    th:text="${person.username}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

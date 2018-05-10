@@ -12,6 +12,7 @@ import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
+	public static final int delayMulitplier = 100;
 	private String password;
 	private String username;
 	private boolean isAccountBlocked = false;
@@ -25,7 +26,7 @@ public class SecurityPrincipal implements UserDetails {
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < user.getLoginAttempts();
+			isExpired = timeDifference < user.getLoginAttempts()* delayMulitplier;
 		}
 	}
 
@@ -37,7 +38,7 @@ public class SecurityPrincipal implements UserDetails {
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
 			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < bUser.getLoginAttempts();
+			isExpired = timeDifference < bUser.getLoginAttempts()*delayMulitplier;
 		}
 	}
 	

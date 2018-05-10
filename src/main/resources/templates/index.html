@@ -11,6 +11,8 @@
             <h2>Witamy w serwisie</h2>
             <div th:if="${loginDate != null}" class="alert alert-success" th:inline="text">Ostatnio zalogowano [[${#dates.format(loginDate, 'dd-MM-yyyy HH:mm')}]]</div>
             <a sec:authorize="isAuthenticated()" class="btn btn-default" id="addPostButton" th:href="@{/addMessage}">Dodaj post</a>
+            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="manage" th:href="@{/resetUsersAttempts}">Ustawienia</a>
+            <a sec:authorize="isAuthenticated()" class="btn btn-default" id="resetUserAttempts" th:href="@{/resetUserAttempts}">Reset</a>
             <div id="addverts">
                 <div class='panel panel-default' th:each="message : ${posts}">
                     <div class='row addContainer vertical-align'>
