@@ -121,19 +121,17 @@ public class MessageController {
     }
 
     @PostMapping(value = "manage")
-    String newPermission(@ModelAttribute(name="newPermission")String userToAddPermissionString, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
-        Long userToAddPermission=Long.parseLong(userToAddPermissionString);
+    String newPermission(@ModelAttribute(name="newPermission")Long userToAddPermission, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
         messageService.addPermission(messageId,userToAddPermission);
         return "redirect:/manage/"+messageId;
     }
     @PostMapping(value = "delete")
-    String deletePermission(@ModelAttribute(name="deletePermission")String userToDeletePermissionString, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
-    	Long userToDeletePermission=Long.parseLong(userToDeletePermissionString);
+    String deletePermission(@ModelAttribute(name="deletePermission")Long userToDeletePermission, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
     	messageService.deletePermission(messageId,userToDeletePermission);
         return "redirect:/manage/"+messageId;
     }
     
-    @ExceptionHandler({MessageManageException.class, NullPointerException.class})
+    @ExceptionHandler({MessageManageException.class, NullPointerException.class, NumberFormatException.class})
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.NOT_FOUND.value());
     }
