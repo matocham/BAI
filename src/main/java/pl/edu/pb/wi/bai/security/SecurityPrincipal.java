@@ -13,7 +13,8 @@ import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
-	private static final int DELY_MULTIPLIER = 100;
+	public static final int DELY_MULTIPLIER = 100;
+
 	private String password;
 	private String username;
 	private String mask;
@@ -27,8 +28,8 @@ public class SecurityPrincipal implements UserDetails {
 		Date lastFailedLogin = user.getLastFailedLogin();
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
-			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < user.getLoginAttempts()*DELY_MULTIPLIER;
+			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime()) / 1000;
+			isExpired = timeDifference < user.getLoginAttempts() * DELY_MULTIPLIER;
 		}
 		this.mask = user.getCurrentPassword().getMask();
 	}
@@ -40,12 +41,12 @@ public class SecurityPrincipal implements UserDetails {
 		Date lastFailedLogin = bUser.getLastFailedLogin();
 		if (lastFailedLogin != null) {
 			Date currentTime = Calendar.getInstance().getTime();
-			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime())/1000;
-			isExpired = timeDifference < bUser.getLoginAttempts()*DELY_MULTIPLIER;
+			long timeDifference = (currentTime.getTime() - lastFailedLogin.getTime()) / 1000;
+			isExpired = timeDifference < bUser.getLoginAttempts() * DELY_MULTIPLIER;
 		}
 		this.mask = bUser.getCurrentMask();
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.emptyList();

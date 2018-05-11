@@ -57,6 +57,5 @@ public class AuthenticationSuccessLogHandler extends SavedRequestAwareAuthentica
 		if (session != null) {
 			session.setAttribute("loginDate", lastSuccessLogin);
 		}
-
 	}
 }

@@ -14,4 +14,6 @@ public interface AllowedMessageRepository extends CrudRepository<AllowedMessage,
     AllowedMessage findByAllowedId_MessageIdAndAllowedId_UserId(Message message, User user);
     @Transactional
     void deleteAllowedMessageByAllowedId_MessageIdAndAllowedId_UserId(Message message, User user);
+    @Transactional
+    void deleteAllowedMessageByAllowedId_MessageId(Message message);
 }
