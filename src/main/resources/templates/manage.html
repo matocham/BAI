@@ -41,7 +41,7 @@
                     <label class="col-sm-2 control-label">Wybierz użytkownika</label>
                     <div class="col-sm-10">
                         <select  name="deletePermission" id="deletePermission" class="form-control ">
-                            <option th:each="person : ${message.allowedUsers}" th:value="${person}" th:text="${person}">
+                            <option th:each="person : ${allowedUsers}" th:value="${person.id}" th:text="${person.username}">
                             </option>
                         </select>
                     </div>
