@@ -58,8 +58,11 @@ public class MessageService {
         messageRepository.save(message);
     }
 
-    public DisplayMessageDto getMessageById(Long id) {
+    public DisplayMessageDto getMessageById(Long id) throws MessageManageException {
         Message msg = messageRepository.findOne(id);
+        if(msg == null) {
+            throw new MessageManageException();
+        }
         DisplayMessageDto displayMessageDto = new DisplayMessageDto();
         displayMessageDto.setText(msg.getText());
         displayMessageDto.setId(msg.getMessageId());
@@ -76,23 +79,31 @@ public class MessageService {
 
     }
 
-    public void editMessage(EditMessageDto editMessageDto) {
+    public void editMessage(EditMessageDto editMessageDto) throws MessageManageException {
         Message message = messageRepository.findOne(editMessageDto.getId());
+        if(message == null) {
+            throw new MessageManageException();
+        }
         message.setText(editMessageDto.getText());
         messageRepository.save(message);
     }
 
 
-    public void deleteMessage(Long id) {
+    public void deleteMessage(Long id) throws MessageManageException {
         Message message = messageRepository.findOne(id);
+        if(message == null) {
+            throw new MessageManageException();
+        }
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
             allowedMessageRepository.deleteAllowedMessageByAllowedId_MessageId(message);
             messageRepository.delete(id);
+        } else {
+        	throw new MessageManageException();
         }
     }
 
-    public void addPermission(Long messageId, Long userToAddPermissionId) {
+    public void addPermission(Long messageId, Long userToAddPermissionId) throws MessageManageException {
         Message message = messageRepository.findOne(messageId);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
@@ -105,17 +116,21 @@ public class MessageService {
                 allowedMessage.setAllowedId(allowedMessagesPK);
                 allowedMessageRepository.save(allowedMessage);
             }
+        } else {
+        	throw new MessageManageException();
         }
     }
 
-    public void deletePermission(Long messageId, String userToDeletePermissionName) {
+    public void deletePermission(Long messageId, Long userToDeletePermission) throws MessageManageException {
         Message message = messageRepository.findOne(messageId);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (message.getModerator().getUsername().equals(myUserPrincipal.getUsername())) {
-            User user = userRepository.findByUsername(userToDeletePermissionName);
+            User user = userRepository.findOne(userToDeletePermission);
             if (allowedMessageRepository.findByAllowedId_MessageIdAndAllowedId_UserId(message, user) != null && !myUserPrincipal.getUsername().equals(user.getUsername())) {
                 allowedMessageRepository.deleteAllowedMessageByAllowedId_MessageIdAndAllowedId_UserId(message, user);
             }
+        } else {
+        	throw new MessageManageException();
         }
     }
 }

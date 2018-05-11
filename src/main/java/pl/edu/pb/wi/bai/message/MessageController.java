@@ -1,23 +1,30 @@
 package pl.edu.pb.wi.bai.message;
 
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import pl.edu.pb.wi.bai.models.AllowedMessage;
-import pl.edu.pb.wi.bai.models.AllowedMessagesPK;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
 import pl.edu.pb.wi.bai.security.SecurityPrincipal;
-
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Controller
 public class MessageController {
@@ -56,7 +63,7 @@ public class MessageController {
     }
 
     @GetMapping(value = "/edit/{id}")
-    String editMessage(Model model, @PathVariable Long id) {
+    String editMessage(Model model, @PathVariable Long id) throws MessageManageException {
         EditMessageDto messageDto = new EditMessageDto();
         DisplayMessageDto displayMessageDto = messageService.getMessageById(id);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -65,12 +72,13 @@ public class MessageController {
             messageDto.setId(displayMessageDto.getId());
             model.addAttribute("message", messageDto);
             return "editMessage";
+        } else {
+        	throw new MessageManageException();
         }
-        return "redirect:/index";
     }
 
     @PostMapping(value = "/edit")
-    String processEditMessage(@ModelAttribute("message") @Valid EditMessageDto editMessageDto, BindingResult result) {
+    String processEditMessage(@ModelAttribute("message") @Valid EditMessageDto editMessageDto, BindingResult result) throws MessageManageException {
         DisplayMessageDto displayMessageDto = messageService.getMessageById(editMessageDto.getId());
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (result.hasErrors()) {
@@ -82,8 +90,7 @@ public class MessageController {
         return "redirect:/index";
     }
     @GetMapping(value="/delete/{id}")
-    String deleteMessage(@PathVariable Long id){
-
+    String deleteMessage(@PathVariable Long id) throws MessageManageException{
         messageService.deleteMessage(id);
         return "redirect:/index";
     }
@@ -92,28 +99,42 @@ public class MessageController {
         return myUserPrincipal.getUsername().equals(displayMessageDto.getOwner().getUsername()) || displayMessageDto.getAllowedUsers().contains(myUserPrincipal.getUsername());
     }
     @GetMapping(value ="manage/{id}")
-    String managePermissions(Model model, @PathVariable Long id){
+    String managePermissions(Model model, @PathVariable Long id) throws MessageManageException{
         DisplayMessageDto messageDto=messageService.getMessageById(id);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!myUserPrincipal.getUsername().equals(messageDto.getOwner().getUsername())) {
+        	throw new MessageManageException();
+        }
         List<User> users=userRepository.findAll()
                 .stream()
                 .filter(u->!messageDto.getAllowedUsers().contains(u.getUsername()))
                 .filter(u->!myUserPrincipal.getUsername().equals(u.getUsername())).collect(Collectors.toList());
         model.addAttribute("remainingUsers",users);
         model.addAttribute("message",messageDto);
+        model.addAttribute("allowedUsers",
+        		messageDto.getAllowedUsers()
+        		.stream()
+        		.map(u->userRepository.findByUsername(u))
+        		.collect(Collectors.toList()));
         model.addAttribute("id",id);
         return "manage";
     }
 
     @PostMapping(value = "manage")
-    String newPermission(@ModelAttribute(name="newPermission")String userToAddPermissionString, @ModelAttribute(name = "id") Long messageId){
+    String newPermission(@ModelAttribute(name="newPermission")String userToAddPermissionString, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
         Long userToAddPermission=Long.parseLong(userToAddPermissionString);
         messageService.addPermission(messageId,userToAddPermission);
         return "redirect:/manage/"+messageId;
     }
     @PostMapping(value = "delete")
-    String deletePermission(@ModelAttribute(name="deletePermission")String userToDeletePermissionString, @ModelAttribute(name = "id") Long messageId){
-        messageService.deletePermission(messageId,userToDeletePermissionString);
+    String deletePermission(@ModelAttribute(name="deletePermission")String userToDeletePermissionString, @ModelAttribute(name = "id") Long messageId) throws MessageManageException{
+    	Long userToDeletePermission=Long.parseLong(userToDeletePermissionString);
+    	messageService.deletePermission(messageId,userToDeletePermission);
         return "redirect:/manage/"+messageId;
+    }
+    
+    @ExceptionHandler({MessageManageException.class, NullPointerException.class})
+    void handleBadRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value());
     }
 }
