@@ -46,7 +46,4 @@ public class PasswordAuthenticationToken extends AbstractAuthenticationToken{
 		}
 		return "";
 	}
-	
-	
-
 }
