@@ -54,4 +54,10 @@ public class PasswordAuthenticationFilter extends AbstractAuthenticationProcessi
 		}
 		return result;
 	}
+	public Boolean isAuth(String username,String password){
+		PasswordAuthenticationToken authToken = new PasswordAuthenticationToken(username, password);
+		return this.getAuthenticationManager().authenticate(authToken).isAuthenticated();
+
+	}
+
 }

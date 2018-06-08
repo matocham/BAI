@@ -13,6 +13,8 @@ import pl.edu.pb.wi.bai.models.User;
 import pl.edu.pb.wi.bai.register.RegisterDto;
 import pl.edu.pb.wi.bai.register.RegisterService;
 import pl.edu.pb.wi.bai.repositories.UserRepository;
+import pl.edu.pb.wi.bai.security.secondStep.PasswordAuthenticationFilter;
+import pl.edu.pb.wi.bai.security.secondStep.PasswordAuthenticationProvider;
 import pl.edu.pb.wi.bai.security.secondStep.PasswordAuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +30,14 @@ public class ChangePassword {
     RegisterService registerService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PasswordAuthenticationFilter passwordAuthenticationFilter;
+
     @GetMapping("/changePassword")
     String ChangePassword(Model model) {
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(myUserPrincipal.getUsername());
-        System.err.println(user.getCurrentPassword().getPassword());
+
         List<String> letters = Arrays.asList(user.getCurrentPassword().getMask().split(""));
         model.addAttribute("mask", letters);
 
@@ -42,18 +47,14 @@ public class ChangePassword {
     }
 
     @PostMapping("/changePassword")
-    String changePasswordFirstStepValidate(HttpServletRequest request,Model model,@ModelAttribute("user") @Valid RegisterDto filledUser, BindingResult result) {
+    String changePasswordFirstStepValidate(HttpServletRequest request, Model model, @ModelAttribute("user") @Valid RegisterDto filledUser, BindingResult result) {
         String password = getPasswordFromRequest(request);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PasswordAuthenticationToken authToken = new PasswordAuthenticationToken(myUserPrincipal.getUsername(), password);
-
-        System.err.println("is auth?"+authToken.isAuthenticated());
-        if(filledUser.getPasswordRepeat().equals(filledUser.getPassword())) {
-            System.err.println(filledUser.getPassword());
-            registerService.changePassword(filledUser.getPassword());
-        }
+        passwordAuthenticationFilter.isAuth(myUserPrincipal.getUsername(), getPasswordFromRequest(request));
+        registerService.changePassword(filledUser.getPassword());
         return "redirect:/settings";
     }
+
     private String getPasswordFromRequest(HttpServletRequest request) {
         String result = "";
         for (int i = 0; i < MAX_PASSWORD_LENGTH; i++) {
