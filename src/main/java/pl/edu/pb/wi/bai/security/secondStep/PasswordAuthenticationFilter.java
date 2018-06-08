@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
+import pl.edu.pb.wi.bai.security.SecurityPrincipal;
 import pl.edu.pb.wi.bai.security.firstStep.UsernameAuthenticationToken;
 
 public class PasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -36,7 +37,8 @@ public class PasswordAuthenticationFilter extends AbstractAuthenticationProcessi
 			UsernameAuthenticationToken userToken = (UsernameAuthenticationToken) auth;
 			UserDetails principal = (UserDetails) userToken.getPrincipal();
 			String username = principal.getUsername();
-			String password = getPasswordFromRequest(request);
+			String mask = ((SecurityPrincipal)principal).getMask();
+			String password = getPasswordFromRequest(request, mask);
 			PasswordAuthenticationToken authToken = new PasswordAuthenticationToken(username, password);
 			SecurityContextHolder.clearContext();
 			return this.getAuthenticationManager().authenticate(authToken);
@@ -44,11 +46,18 @@ public class PasswordAuthenticationFilter extends AbstractAuthenticationProcessi
 		throw new BadCredentialsException("User not preauthincated");
 	}
 
-	private String getPasswordFromRequest(HttpServletRequest request) {
+	private String getPasswordFromRequest(HttpServletRequest request, String mask) {
 		String result = "";
-		for (int i = 0; i < MAX_PASSWORD_LENGTH; i++) {
+		for (int i = 0; i < mask.length(); i++) {
+			String charAt = String.valueOf(mask.charAt(i));
+			if(charAt.equals("0")){
+				continue;
+			}
 			String partialPass = request.getParameter(PASSWORD_PARAM_PREFIX + i);
 			if (partialPass != null) {
+				if(partialPass.length() != 1){
+					throw new BadCredentialsException("User not preauthincated");
+				}
 				result += partialPass;
 			}
 		}

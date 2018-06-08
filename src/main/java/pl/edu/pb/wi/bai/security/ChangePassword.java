@@ -52,28 +52,32 @@ public class ChangePassword {
 
     @PostMapping("/changePassword")
     String changePasswordFirstStepValidate(HttpServletRequest request, Model model, @ModelAttribute("user") @Valid RegisterDto filledUser, BindingResult result) {
-        String password = getPasswordFromRequest(request);
         SecurityPrincipal myUserPrincipal = (SecurityPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String encodePass=passwordEncoder.encode(getPasswordFromRequest(request));
         User currentUser=userRepository.findByUsername(myUserPrincipal.getUsername());
-
-            if(passwordEncoder.matches(getPasswordFromRequest(request),currentUser.getCurrentPassword().getPassword()))
-            {
+        if(filledUser.getPassword().equals(filledUser.getPasswordRepeat())) {
+            if (passwordEncoder.matches(getPasswordFromRequest(request, currentUser.getCurrentPassword().getMask()), currentUser.getCurrentPassword().getPassword())) {
                 registerService.changePassword(filledUser.getPassword());
                 System.err.println("zmieniono");
             }
-
+        }
+        else
+        {
+            System.err.println("hasła nie są takie same");
+        }
 
         return "redirect:/settings";
     }
 
-    private String getPasswordFromRequest(HttpServletRequest request) {
+    private String getPasswordFromRequest(HttpServletRequest request, String mask) {
         String result = "";
-        for (int i = 0; i < MAX_PASSWORD_LENGTH; i++) {
+        for (int i = 0; i < mask.length(); i++) {
+            String charAt = String.valueOf(mask.charAt(i));
+            if(charAt.equals("0")){
+                continue;
+            }
             String partialPass = request.getParameter(PASSWORD_PARAM_PREFIX + i);
             if (partialPass != null) {
-                result += partialPass;
+                result += partialPass.charAt(0);
             }
         }
         return result;

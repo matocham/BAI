@@ -13,7 +13,7 @@ import pl.edu.pb.wi.bai.models.BadUser;
 import pl.edu.pb.wi.bai.models.User;
 
 public class SecurityPrincipal implements UserDetails {
-	public static final int DELY_MULTIPLIER = 100;
+	public static final int DELY_MULTIPLIER = 10;
 
 	private String password;
 	private String username;
