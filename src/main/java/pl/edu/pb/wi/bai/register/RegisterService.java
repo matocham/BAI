@@ -75,6 +75,8 @@ public class RegisterService {
         //if(myUserPrincipal.getUsername().equals(username)){
         User user = userRepository.findByUsername(myUserPrincipal.getUsername());
         List<Password> passwords = passwordRepository.findByUser(user);
+        user.setCurrentPassword(null);
+        userRepository.save(user);
         for (Password password1 : passwords) {
             passwordRepository.delete(password1.getId());
         }
